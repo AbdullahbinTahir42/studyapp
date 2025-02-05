@@ -5,8 +5,7 @@ from django.db.models import Q, Count
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.contrib.auth.forms import UserCreationForm
-from .forms import UserForm
+from .forms import UserForm,MyCustomuserform
 
 
 def loginPage(request):
@@ -34,38 +33,22 @@ def logoutuser(request):
     logout(request)
     return redirect('home')
 
-
 def registerPage(request):
-    
+    form = MyCustomuserform()
+
     if request.method == 'POST':
-        fullname = request.POST.get('fullname')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
-        users = User.objects.all()
-        for user in users:
-            if user.username == username:
-                messages.error(request, "Username already exits!")
-                return render(request, 'base/signup.html')
+        form = MyCustomuserform(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()  # Ensure username exists
+            user.save()
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, "Error occurred during registration!")
 
-
-        if password != confirm_password:
-            messages.error(request, "Passwords do not match")
-            return render(request, 'base/signup.html')  # Reload the same page with error message
-
-        # Optionally, you can add more validations for username and password here
-
-        # If passwords match, create a new user
-        user = User.objects.create_user(username=username, password=password)
-        user.first_name = fullname
-        user.save()
-
-        messages.success(request, "Account created successfully!")
-        login(request,user)
-        return redirect('home')  # Redirect to the login page after successful signup
-
-    return render(request, 'base/signup.html')  # Render the signup form
-
+    context = {'form': form}
+    return render(request, 'base/signup.html', context)
 
 
 def home(request):
@@ -90,7 +73,8 @@ def room(request, pk):
     room = Room.objects.get(id = pk)
     room_messages = room.message_set.all()
     participants = room.participants.all()
-
+    if request.user.is_authenticated and request.user not in participants:
+        room.participants.add(request.user)
     if request.method == 'POST':
         message = Message.objects.create(
             user = request.user,

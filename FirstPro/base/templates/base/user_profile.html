@@ -17,7 +17,7 @@
         <div class="profile">
           <div class="profile__avatar">
             <div class="avatar avatar--large active">
-              <img src="https://randomuser.me/api/portraits/men/11.jpg" />
+              <img src="{{user.avatar.url}}" />
             </div>
           </div>
        
@@ -54,7 +54,7 @@
           <div class="roomListRoom__header">
             <a href="" class="roomListRoom__author">
               <div class="avatar avatar--small active">
-                <img src="https://randomuser.me/api/portraits/men/11.jpg" />
+                <img src="{{room.host.avatar.url}}" />
               </div>
               <span>@{{user.username}}</span>
             </a>
