@@ -1,0 +1,65 @@
+{% extends 'main.html' %} 
+{% load static %}
+{% block content %}
+<div class="settings layout__body">
+  <div class="settings__avatar">
+    <div class="avatar avatar--large active">
+      <img src="{% static 'images/avatar.svg' %}" id="preview-avatar" />
+    </div>
+  </div>
+  <form class="form" action="#">
+    <div class="form__group form__avatar">
+      <label for="avatar">Upload Avatar</label>
+      <input
+        class="form__hide"
+        required
+        type="file"
+        name="avatar"
+        id="avatar"
+        accept="image/png, image/gif, image/jpeg"
+      />
+    </div>
+    <div class="form__group">
+      <label for="name">Full Name</label>
+      <input
+        id="fullname"
+        name="fullname"
+        type="text"
+        placeholder="e.g. Dennis Ivy"
+        value="Dennis Ivy"
+      />
+    </div>
+    <div class="form__group">
+      <label for="username">Username</label>
+      <input
+        id="username"
+        name="username"
+        type="text"
+        placeholder="e.g. @dennis_ivy"
+        value="@dennis_ivy"
+      />
+    </div>
+    <div class="form__group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        placeholder="e.g. user@domain.com"
+      />
+    </div>
+    <div class="form__group">
+      <label for="about">About</label>
+      <textarea
+        name="about"
+        id="about"
+        placeholder="Write about yourself..."
+      ></textarea>
+    </div>
+    <div class="form__action">
+      <a class="btn btn--dark" href="{% url 'home' %}">Cancel</a>
+      <button class="btn btn--main" type="submit">Update Settings</button>
+    </div>
+  </form>
+</div>
+{% endblock content %}
